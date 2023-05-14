@@ -21,7 +21,7 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
     ligation_list = ligation_file['ligation'].tolist()
     RT_file = pd.read_csv(RT_Barcode_file, header=None, names=['RT_barcode'],sep='\t')
     RT_list = RT_file['RT_barcode'].to_list()
-    f1 = os.path.join(input_folder,f"{sample_id}_R1.fq.gz")
+    f1 = os.path.join(input_folder,f'{sample_id}_R1.fq.gz')
     f2 = os.path.join(input_folder,f'{sample_id}_R2.fq.gz')
     f3 = os.path.join(output_folder,f"{sample_id}_R2_barcode.fq.gz")
     f3_w = gzip.open(f3, 'wb')
@@ -81,8 +81,27 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
                len(reads_count)/len(merge_barcode_umi),
                time.end - time.start))
     
-
-    
+if __name__ == '__main__':
+    input_folder = '/home/data/vip9t22/test/BC230502-1'
+    output_folder = '/home/data/vip9t22/test/BC230502-1'
+    sample_id = 'BC230502-1'
+    ligation_barcode_file = '/home/data/vip9t22/test/BC230502-1/ligation_barcode.txt'
+    RT_Barcode_file = '/home/data/vip9t22/test/BC230502-1/RT_barcode.txt'
+    p7_file = '/home/data/vip9t22/test/BC230502-1/sample_p7.txt'
+    # input_folder = sys.argv[1]
+    # output_folder = sys.argv[2]
+    # sample_id = sys.argv[3]
+    # ligation_barcode_file = sys.argv[4]
+    # RT_Barcode_file = sys.argv[5]
+    # p7_file = sys.argv[6]
+    Extract_barcode(
+        input_folder = input_folder,
+        output_folder = output_folder,
+        sample_id = sample_id,
+        ligation_barcode_file = ligation_barcode_file,
+        RT_Barcode_file = RT_Barcode_file,
+        p7_file = p7_file
+    )
 
 
 
