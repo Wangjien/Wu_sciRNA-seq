@@ -83,12 +83,26 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
                time.end - time.start))
     
 if __name__ == '__main__':
-    input_folder = '/home/data/vip9t22/test/BC230502-1'
-    output_folder = '/home/data/vip9t22/test/BC230502-1'
-    sample_id = 'BC230502-1'
-    ligation_barcode_file = '/home/data/vip9t22/test/BC230502-1/ligation_barcode.txt'
-    RT_Barcode_file = '/home/data/vip9t22/test/BC230502-1/RT_barcode.txt'
-    p7_file = '/home/data/vip9t22/test/BC230502-1/sample_p7.txt'
+    # input_folder = '/home/data/vip9t22/test/BC230502-1'
+    # output_folder = '/home/data/vip9t22/test/BC230502-1'
+    # sample_id = 'BC230502-1'
+    # ligation_barcode_file = '/home/data/vip9t22/test/BC230502-1/ligation_barcode.txt'
+    # RT_Barcode_file = '/home/data/vip9t22/test/BC230502-1/RT_barcode.txt'
+    # p7_file = '/home/data/vip9t22/test/BC230502-1/sample_p7.txt'
+    input_folder = sys.argv[1]
+    output_folder = sys.argv[2]
+    sample_id = sys.argv[3]
+    ligation_barcode_file = sys.argv[4]
+    RT_Barcode_file = sys.argv[5]
+    p7_file = sys.argv[6]
+    Extract_barcode(
+        input_folder = input_folder,
+        output_folder = output_folder,
+        sample_id = sample_id,
+        ligation_barcode_file = ligation_barcode_file,
+        RT_Barcode_file = RT_Barcode_file,
+        p7_file = p7_file
+    )
 
 
 
