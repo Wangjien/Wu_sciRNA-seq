@@ -57,15 +57,16 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
     reads_count = []
     for name,seq,qual in pyfastx.Fastq(f2,build_index=False):  
         reads_count.append(name)
+        
         if name in merge_barcode_umi:
             # print('@' +name + ',' +  merge_barcode_umi[name])
             # print(seq)
             # print('+')
             # print(qual)
-            f3_w.write(('@'+name + ',' + merge_barcode_umi[name]+'\n').encode)
-            f3_w.write((seq + '\n').encode)
-            f3_w.write(('+' + '\n').encode)
-            f3_w.write((qual + '\n').encode)
+            f3_w.write(('@'+name + ',' + merge_barcode_umi[name]+'\n').encode())
+            f3_w.write((seq + '\n').encode())
+            f3_w.write(('+' + '\n').encode())
+            f3_w.write((qual + '\n').encode())
             count +=1
             percent = (count/len(merge_barcode_umi))*100
             print('\r' + ">>>>>>>>>>>>>>>>>>>>>>> %d%% (%d/%d)" %(percent,count,len(merge_barcode_umi)),end="")
@@ -78,7 +79,7 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
         占比:%.4f,
         耗时:%s 秒
         """ % (len(reads_count),len(merge_barcode_umi),
-               len(reads_count)/len(merge_barcode_umi),
+               len(merge_barcode_umi)/len(reads_count),
                time.end - time.start))
     
 if __name__ == '__main__':
