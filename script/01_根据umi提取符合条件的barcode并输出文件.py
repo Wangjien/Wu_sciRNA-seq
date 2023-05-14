@@ -6,7 +6,7 @@ import pandas as pd
 import pyfastx
 from multiprocessing import pool
 
-def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_file, RT_Barcode_file, p7_file):
+def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_file, RT_Barcode_file, p7_file,log_file):
     """
     从Read1序列中根据umi序列的位置,提取RT barcode和ligation barcode,添加到对应的双端测序的Read2序列,并输出结果文件。
     """
@@ -57,8 +57,16 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
             # print(seq)
             # print('+')
             # print(qual)
+            f3_w.write(('@'+name + ',' + merge_barcode_umi[name]+'\n').encode)
+            f3_w.write((seq + '\n').encode)
+            f3_w.write(('+' + '\n').encode)
+            f3_w.write((qual + '\n').encode)
             count +=1
-            print(count)
+            percent = (count/len(merge_barcode_umi))*100
+            print('\r'+">>>>>>>>>>%d%% (%d/%d)" %(percent,count,len(merge_barcode_umi)),end="")
+            # print(count)
+
+
 
 
 if __name__ == '__main__':
