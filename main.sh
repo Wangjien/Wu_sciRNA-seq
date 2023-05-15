@@ -1,3 +1,34 @@
 #! /usr/bin/bash
+echo "提取Read1中的序列,添加到满足条件的Read2中并输出"
+input_folder="/root/wangje/Project/吴霞" 
+output_folder="/root/wangje/Project/吴霞/Data" 
+sample_id="BC230502-1"
+ligation_barcode_file="/root/wangje/Project/吴霞/script/ligation_barcode.txt"
+RT_Barcode_file="/root/wangje/Project/吴霞/script/RT_barcode.txt"
+p7_file="/root/wangje/Project/吴霞/script/sample_p7.txt"
+
+tmpfifo='my_tmp_fifo'
+mkfifo ${tmpfifo}
+exec 8 <> ${tmpfifo}
+rm -f ${tmpfifo}
 
 for i in {1..96}
+    do {
+        python /root/wangje/Project/吴霞/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder}/$sample_id $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+
+    }&
+done >& 8
+wait
+exec 8>&-     
+
+input_folder="/root/wangje/Project/吴霞" 
+output_folder="/root/wangje/Project/吴霞/Data" 
+ligation_barcode_file="/root/wangje/Project/吴霞/script/ligation_barcode.txt"
+RT_Barcode_file="/root/wangje/Project/吴霞/script/RT_barcode.txt"
+p7_file="/root/wangje/Project/吴霞/script/sample_p7.txt"
+for i in {1..96}
+do 
+    sample_id="BC230502-${i}"
+    echo "$sample_id"
+    python /root/wangje/Project/吴霞/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder}/$sample_id $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+done

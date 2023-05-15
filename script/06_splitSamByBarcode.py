@@ -52,13 +52,45 @@ def split_samfile(samfile, barcode_file, output_folder, cutoff):
     #     if k in barcode_filtered:
     #         barcode_filtered_file.write("%s \t %s \n" % (k, v))
     # barcode_filtered_file.close()
+    if not os.path.exists(os.path.join(output_folder,plot_name)):
+        os.makedirs(os.mkdir(os.path.join(output_folder,plot_name)))
+    else:
+        print("文件夹已经存在了")
     
+    sample_list_file = open(os.path.join(output_folder,plot_name))
+    out_files = {}
+    for barcode in barcode_filtered:
+        out_file = os.path.join(output_folder,plot_name,f"{barcode}.sam")
+        out_files[barcode] = open(out_file, 'w')
+        sample_list_file.write(plot_name+ '.' + barcode + "\n")
     
+    # 写成每个reads的sam file
+    with open(samfile) as fw:
+        for line in fw.readlines():
+            if line.startswith("@"):
+                for barcode in barcode_filtered:
+                    out_files[barcode].write(line)
+            else:
+                barcode = line.strip().split("\t")[0].split(",")[1]
+                if barcode in barcode_filtered:
+                    out_files[barcode].write(line)
+    sample_list_file.close()
+    for barcode in barcode_filtered:
+        out_files[barcode].close()
     
-    
-    
-    
-    # 写出筛选的barcode对应的Sam文件
+    if __name__ == "__main__":
+        samfile = sys.argv[1]
+        barcode_file = sys.argv[2]
+        output_folder = sys.argv[3]
+        cutoff = 20
+        split_samfile(
+            samfile=samfile, 
+            barcode_file = barcode_file,
+            output_folder= output_folder, 
+            cutoff= cutoff
+        )
+        
+
     
 
             
