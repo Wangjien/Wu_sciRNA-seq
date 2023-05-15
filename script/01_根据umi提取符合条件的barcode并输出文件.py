@@ -69,7 +69,7 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
             f3_w.write((qual + '\n').encode())
             count +=1
             percent = (count/len(merge_barcode_umi))*100
-            print('\r' + ">>>>>>>>>>>>>>>>>>>>>>> %d%% (%d/%d)" %(percent,count,len(merge_barcode_umi)),end="")
+            print('\r' + "#" * round(percent) + ">>>>>>>>>>>>>>>>>>>>>>> %d%% (%d/%d)" %(percent,count,len(merge_barcode_umi)),end="")
             # print(count)
     time.end = time.time()
     log.write(
