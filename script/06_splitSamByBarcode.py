@@ -28,6 +28,7 @@ def split_samfile(samfile, barcode_file, output_folder, cutoff):
     plot_name = samfile.split("_")[0]
     fig = plt.figure()
     plt.hist(barcode_count.values(), bins=100)
+    plt.xlim(0, max(set(barcode_count.values())))
     plt.ylabel('frequency')
     plt.xlabel("Number of unique read")
     fig_output = os.path.join(output_folder,f"{plot_name}.png")
@@ -37,7 +38,7 @@ def split_samfile(samfile, barcode_file, output_folder, cutoff):
     # 写出每个文件的barcode分布
     read_dist = open(os.path.join(output_folder,f"{plot_name}_Barcode_distribution.txt"), 'w')
     for barcode, value in barcode_count.items():
-        read_dist.write("%s \t %s" %(barcode, value))
+        read_dist.write("%s \t %s \n" %(barcode, value))
     read_dist.close()
     
     # 根据cutoff对barcode进行过滤
