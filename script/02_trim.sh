@@ -6,8 +6,8 @@ core=6
 
 tempfifo="my_temp_fifo"
 mkfifo ${tempfifo}
-exec ${core}<>${tempfifo}
 rm -rf ${tempfifo}
+exec ${core}<>${tempfifo}
 
 for i in {1..96}
 do
