@@ -74,11 +74,12 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
     time.end = time.time()
     log.write(
         """
+        文件:%s
         测序总reads数目:%s,
         符合条件的reads数目:%s,
         占比:%.4f,
         耗时:%s 秒
-        """ % (len(reads_count),len(merge_barcode_umi),
+        """ % (sample_id,len(reads_count),len(merge_barcode_umi),
                len(merge_barcode_umi)/len(reads_count),
                time.end - time.start))
     
