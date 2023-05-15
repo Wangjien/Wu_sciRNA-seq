@@ -29,7 +29,7 @@ conda activate sciRNA
 conda install -y STAR samtools cutadapter r-seurat
 ```
 
-* [TrimGalore]: https://github.com/FelixKrueger/TrimGalore/releases
+* TrimGalore [TrimGalore]: https://github.com/FelixKrueger/TrimGalore/releases
 
 ```bash
 mkdir software
@@ -38,6 +38,15 @@ wget -O TrimGalore.tar.gz https://github.com/FelixKrueger/TrimGalore/archive/ref
 tar -zxvf TrimGalore.tar.gz && rm -rf TrimGalore.tar.gz 
 # 将软件添加到PATH中
  echo export PATH=\"`pwd`:\$PATH\" >> ~/.bashrc && source ~/.bashrc
+```
+* python 需要的模块
+```bash 
+python3 -m pip install numpy
+python3 -m pip install pandas
+python3 -m pip install pyfaxis
+python3 -m pip install matplotlib
+python3 -m pip install gzip
+python3 -m pip install pysam
 ```
 
 ### 下载需要的参考文件
