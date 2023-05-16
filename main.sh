@@ -33,7 +33,10 @@ do
     python /root/wangje/Project/吴霞/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder}/$sample_id $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
 
-
+####################################################
+# 将sam文件按照barcode类型进行分割
+####################################################
+echo ">>>>>>>>>> split samfile by barcode <<<<<<<<<<"
 sam_file="/home/data/vip9t22/Project/BC2305/BC230502-" 
 barcode_file="/home/data/vip9t22/Project/BC2305/combined_barcode.txt" 
 output_folder="/home/data/vip9t22/Project/BC2305/BC230502-"
