@@ -23,7 +23,7 @@ import logging
 def sciRNAseq_count(sample, input_folder,exons, genes, gene_end, gene_annotat, sample_ID):
     input_sam = input_folder + "/" + sample + ".sam"
     report = input_folder + "/" + sample + ".report"
-    count_output = output_folder + "/" + sample + ".count"
+    count_output = input_folder + "/" + sample + ".count"
  
     counts = collections.Counter()
     sam_file = input_sam
