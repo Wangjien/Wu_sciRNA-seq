@@ -56,12 +56,36 @@ done
 gtf_file="/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
 input_folder="/root/wangje/Project/吴霞/Data/06_splitSAM"
 sample_ID="/root/wangje/Project/吴霞/Data/06_splitSAM"
-core=10
+core=100
 
-for i in {1..96}
+for i in {3..96}
 do 
     python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BC230502-${i} ${sample_ID}/BC230502-${i}/BC230502-${i}_filterAndSort_rmDup.sample_list.txt ${core}
 done
+
+## 并发，提高运行速度（有问题需改进）
+
+# gtf_file="/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
+# input_folder="/root/wangje/Project/吴霞/Data/06_splitSAM"
+# sample_ID="/root/wangje/Project/吴霞/Data/06_splitSAM"
+# core=10
+
+# tempfifo="my_temp_fifo"
+# mkfifo ${tempfifo}
+# rm -rf ${tempfifo}
+# exec 4<>${tempfifo}
+
+# for i in {1..96}
+# do 
+# {
+#     python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BC230502-${i} ${sample_ID}/BC230502-${i}/BC230502-${i}_filterAndSort_rmDup.sample_list.txt ${core}
+# }&
+# done >&4 
+# wait
+# exec 4>&-
+
+
+
 
 
 

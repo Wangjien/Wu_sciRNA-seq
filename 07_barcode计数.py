@@ -245,7 +245,8 @@ def sciRNA_count_parallel(gtf_file, input_folder, sample_ID, core_number):
             message = (feature.attr["gene_id"] + "_intron" + "," + feature.attr["gene_type"] + "," 
                        + "intron" + "," + feature.attr["gene_name"] + "_intron" + "," + str(gene_count) + "\n")
             gene_annotat.write(message)
-            
+             
+                        
         elif feature.type == "transcript":
             transcript_n += 1
             #print "feature gene name: ", feature.attr["gene_id"]
@@ -272,7 +273,8 @@ def sciRNA_count_parallel(gtf_file, input_folder, sample_ID, core_number):
     cell_count = 0
     for i in sample_ID:
         cell_count += 1
-        message = i + "," + str(cell_count) + "\n"
+        message = str(i).split(".")[1] + "," + str(cell_count) + "\n"
+        # message = i + "," + str(cell_count) + "\n"
         cell_annotat.write(message)
     cell_annotat.close()
     
@@ -316,9 +318,9 @@ if __name__ == "__main__":
     sample_ID = sys.argv[3]
     core_number = sys.argv[4]
     # gtf_file = "/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
-    # input_folder = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-76"
-    # sample_ID = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-76/BC230502-76_filterAndSort_rmDup.sample_list.txt"
-    # core_number = 10
+    # input_folder = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-2"
+    # sample_ID = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-2/BC230502-2_filterAndSort_rmDup.sample_list.txt"
+    # core_number = 100
     sciRNA_count_parallel(gtf_file, input_folder, sample_ID, core_number)
 
         
