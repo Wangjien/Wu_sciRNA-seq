@@ -32,3 +32,13 @@ do
     echo "$sample_id"
     python /root/wangje/Project/吴霞/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder}/$sample_id $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
+
+
+sam_file="/home/data/vip9t22/Project/BC2305/BC230502-" 
+barcode_file="/home/data/vip9t22/Project/BC2305/combined_barcode.txt" 
+output_folder="/home/data/vip9t22/Project/BC2305/BC230502-"
+cutoff=20
+for i in {1..96}
+do 
+    python 06.py ${sam_file}${i}_filterAndSort_rmDup.sam ${barcode_file} ${output_folder}${i} $cutoff
+done
