@@ -45,3 +45,8 @@ for i in {1..96}
 do 
     python 06.py ${sam_file}${i}_filterAndSort_rmDup.sam ${barcode_file} ${output_folder}${i} $cutoff
 done
+
+###################################################
+# gene 计数
+###################################################
+for 
