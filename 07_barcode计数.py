@@ -311,14 +311,14 @@ def p_sciRNAseq_count(sample):
 '''
     
 if __name__ == "__main__":
-    # gtf_file = sys.argv[1]
-    # input_folder = sys.argv[2]
-    # sample_ID = sys.argv[3]
-    # core_number = sys.argv[4]
-    gtf_file = "/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
-    input_folder = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-76"
-    sample_ID = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-76/BC230502-76_filterAndSort_rmDup.sample_list.txt"
-    core_number = 10
+    gtf_file = sys.argv[1]
+    input_folder = sys.argv[2]
+    sample_ID = sys.argv[3]
+    core_number = sys.argv[4]
+    # gtf_file = "/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
+    # input_folder = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-76"
+    # sample_ID = "/root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-76/BC230502-76_filterAndSort_rmDup.sample_list.txt"
+    # core_number = 10
     sciRNA_count_parallel(gtf_file, input_folder, sample_ID, core_number)
 
         
