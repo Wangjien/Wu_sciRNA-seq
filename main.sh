@@ -49,4 +49,14 @@ done
 ###################################################
 # gene 计数
 ###################################################
-for 
+gtf_file="/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
+input_folder="/root/wangje/Project/吴霞/Data/06_splitSAM"
+sample_ID="/root/wangje/Project/吴霞/Data/06_splitSAM"
+
+for i in {1..96}
+do 
+    python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BC230502-${i} ${sample_ID}/BC230502-${i}/BC230502-${i}_filterAndSort_rmDup.sample_list.txt
+done
+
+
+
