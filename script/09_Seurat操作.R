@@ -69,5 +69,64 @@ scRNA_seurat <- RunPCA(scRNA_seurat, features = VariableFeatures(object = scRNA_
 
 # 聚类分群
 scRNA_seurat <- FindNeighbors(scRNA_seurat, dims = 1:30)
-scRNA_seurat <- FindClusters(scRNA_seurat, resolution = seq(0.05,1,0.05))
-scRNA_seurat <- RunUMAP(scRNA_seurat, dims = 1:10)
+scRNA_seurat <- FindClusters(scRNA_seurat, resolution = seq(0.1,0.5,0.1))
+scRNA_seurat <- RunUMAP(scRNA_seurat, dims = 1:30)
+
+# 保存图片
+ggsave(filename = "/root/wangje/Project/吴霞/Data/umap_new.png",plot=DimPlot(scRNA_seurat), height=5,width=5,dpi=300)
+ggsave(filename = "/root/wangje/Project/吴霞/Data/Vlnplot_整体.png",plot=VlnPlot(scRNA_seurat, features=c('nCount_RNA','nFeature_RNA','percent.mt'), ncol=3), height=5,width=8,dpi=300)
+
+# 绘制FeaturePlot
+NKT <- c('CD3D','CD3G','CD2')
+Fibroblasts <- c('COL1A1','DCN','LUM')
+Myeloids <- c('LYZ','CD68','TYROBP')
+Epithelial <- c('CD24','KRT19','EPCAM')
+Bcells <- c('CD79A','CD19','MS4A1')
+Endothelial <- c('CLDN5','FLT1','RAMP2')
+Plasma <- c('IGHG1','JCHAIN','MZB1')
+Hepatocytes <- c('ALB','APOB','HP')
+Keratinocytes <- c("KRT5","KRT14","FABP5")
+DC <- c("LILRA4","CXCR3","IRF7")
+Mast <- c("CPA3","TPSABT","TPSB2")
+
+marker.list <- list("NK&T cell"=NKT,'B cell'=Bcells,"Plasmas" =Plasma,
+                    Myeloids=Myeloids,Fibroblasts=Fibroblasts,
+                    Epithelials=Epithelial,Endothelials=Endothelial,
+                    Hepatocytes=Hepatocytes,Keratinocytes=Keratinocytes,
+                    DC = DC, Mast = Mast)
+
+plotFeature <- function(scRNA_data = scRNA_data,
+                        choose = "Feature",
+                        col_num = 6, marker.list = marker.list,...) {
+    pacman::p_load("Seurat", "ggplot2", "tidyverse")
+    DefaultAssay(scRNA_data) <- "RNA"
+    plist <- list()
+    if (is.null(choose)) {
+        message("请选择绘图类型")
+    } else if (choose == "Feature") {
+        for (i in names(marker.list)) {
+            for (j in marker.list[[i]]) {
+                #    print(paste0(i,"_",j))
+                tmp <- tryCatch(
+                    {
+                        FeaturePlot(scRNA_data, features = j) +
+                            theme(legend.position = "right") +
+                            labs(title = paste0(i, "_", j))
+                    },
+                    error = function(e) {
+                        message("Error @ ", j)
+                        return(NA)
+                    },
+                    finally = {
+                        message(paste0(i, "_", j, "_next..."))
+                    }
+                )
+                plist[[paste0(i, "_", j)]] <- tmp
+            }
+        }
+        p_new <- Filter(Negate(anyNA), plist)
+        p <- wrap_plots(p_new, bycol = T, ncol = col_num)
+        return(p)}}
+png("/root/wangje/Project/吴霞/大群markerFeaturePlot.png",height =2000,width = 5000,res=300)
+plotFeature(scRNA_data=scRNA_seurat,choose="Feature",col_num=5,marker.list=marker.list)
+dev.off()
