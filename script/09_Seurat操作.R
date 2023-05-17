@@ -58,3 +58,16 @@ scRNA_seurat = merge(new_flist[[1]],new_flist[2:length(new_flist)])
 # 标准化及高变基因
 scRNA_seurat <- NormalizeData(scRNA_seurat, normalization.method = "LogNormalize", scale.factor = 10000)
 scRNA_seurat <- FindVariableFeatures(scRNA_seurat, selection.method = "vst", nfeatures = 2000)
+
+# 均一化
+all.genes <- rownames(scRNA_seurat)
+scRNA_seurat <- ScaleData(scRNA_seurat, features = all.genes)
+# scRNA_seurat <- ScaleData(scRNA_seurat) # 默认是对高变基因进行归一化（默认2000个高变基因）
+
+# pca
+scRNA_seurat <- RunPCA(scRNA_seurat, features = VariableFeatures(object = scRNA_seurat))
+
+# 聚类分群
+scRNA_seurat <- FindNeighbors(scRNA_seurat, dims = 1:30)
+scRNA_seurat <- FindClusters(scRNA_seurat, resolution = seq(0.05,1,0.05))
+scRNA_seurat <- RunUMAP(scRNA_seurat, dims = 1:10)
