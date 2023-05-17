@@ -84,6 +84,30 @@ done
 # wait
 # exec 4>&-
 
+#######################################################
+# 转化第7步的结果，转换为Seurat Read10x函数的输入文件
+#######################################################
+pwd="/root/wangje/Project/吴霞/Data/06_splitSAM"
+script="/root/wangje/Project/吴霞/script/08_转换第7步的结果.py"
+
+for i in {1..49}
+do  
+    echo ${pwd}/BC230502-${i}
+    python $script $pwd/BC230502-${i}
+done
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
