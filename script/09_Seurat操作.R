@@ -50,3 +50,11 @@ plist = Filter(Negate(is.null), plist) # 去除NULL
 ggsave(filename = "/root/wangje/Project/吴霞/Data/小提琴图.png",plot=wrap_plots(plist,ncol=8),height=16,width=32,limitsize=FALSE)
 
 # 合并列表中的Seurat对象为一个整体的Seurat对象
+## 合并之前需要先去除dim为0的数据
+new_flist <- lapply(new_flist, function(df) ifelse(dim(df)[1] > 0, df, NULL))
+new_flist <- Filter(function(df) !is.null(df), new_flist)
+scRNA_seurat = merge(new_flist[[1]],new_flist[2:length(new_flist)])
+
+# 标准化及高变基因
+scRNA_seurat <- NormalizeData(scRNA_seurat, normalization.method = "LogNormalize", scale.factor = 10000)
+scRNA_seurat <- FindVariableFeatures(scRNA_seurat, selection.method = "vst", nfeatures = 2000)
