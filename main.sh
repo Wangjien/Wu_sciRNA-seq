@@ -90,7 +90,7 @@ done
 pwd="/root/wangje/Project/吴霞/Data/06_splitSAM"
 script="/root/wangje/Project/吴霞/script/08_转换第7步的结果.py"
 
-for i in {1..49}
+for i in {1..96}
 do  
     echo ${pwd}/BC230502-${i}
     python $script $pwd/BC230502-${i}
