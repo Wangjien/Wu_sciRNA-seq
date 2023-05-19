@@ -16,3 +16,5 @@ STAR \
     --genomeFastaFiles  ${fa}\
     --sjdbGTFfile ${gtf} \
     --sjdbOverhang 55 #读段长度: 后续回帖读段的长度, 如果读长是PE 100， 则该值设为100-1=99
+
+

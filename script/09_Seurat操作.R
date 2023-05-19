@@ -101,7 +101,7 @@ marker.list <- list("NK&T cell"=NKT,'B cell'=Bcells,"Plasmas" =Plasma,
                     Myeloids=Myeloids,Fibroblasts=Fibroblasts,
                     Epithelials=Epithelial,Endothelials=Endothelial,
                     Hepatocytes=Hepatocytes,Keratinocytes=Keratinocytes,
-                    
+
                     DC = DC, Mast = Mast)
 
 plotFeature <- function(scRNA_data = scRNA_data,
@@ -136,17 +136,22 @@ plotFeature <- function(scRNA_data = scRNA_data,
         p_new <- Filter(Negate(anyNA), plist)
         p <- wrap_plots(p_new, bycol = T, ncol = col_num)
         return(p)}}
-png("/root/wangje/Project/吴霞/Data/大群markerFeaturePlot_cutoff3_保留200.png",height =2000,width = 5000,res=300)
-plotFeature(scRNA_data=scRNA_seurat,choose="Feature",col_num=5,marker.list=marker.list)
+png("/root/wangje/Project/吴霞/Data/大群markerFeaturePlot_cutoff3_new.png",height =2000,width = 5000,res=300)
+png("/root/wangje/Project/吴霞/Data/GSM4186980.png",height =2000,width = 5000,res=300)
+p = plotFeature(scRNA_data=test,choose="Feature",col_num=6,marker.list=marker.list)
 dev.off()
+
+ggsave(filename='./FeaturePlot.png',height =20,width = 24,dpi=300, plot=p, bg='white')
+
 
 # 绘制TOP10基因 热图
 seurat.markers <- FindAllMarkers(scRNA_seurat, only.pos = TRUE, min.pct = 0.25, logfc.threshold = 0.25)
 seurat.markers %>%
     group_by(cluster) %>%
     top_n(n = 10, wt = avg_log2FC) -> top10
-p_h = DoHeatmap(scRNA_seurat, features = top10$gene) + NoLegend() 
-ggsave(filename = "/root/wangje/Project/吴霞/Data/Top10基因热图.png",plot=p_h, height=5,width=5,dpi=300)
+p_h = DoHeatmap(scRNA_seurat, features = top10$gene) + NoLegend() +
+    theme(axis.text.y=element_text(size=3))
+ggsave(filename = "/root/wangje/Project/吴霞/Data/01_Top10基因热图_new.png",plot=p_h, height=5,width=5,dpi=300)
 
 # 写出表达矩阵
 exp_mtx = as.matrix(scRNA_seurat@assays$RNA@counts) %>% as.data.frame()
@@ -155,3 +160,5 @@ data.table::fwrite(exp_mtx, file = "/root/wangje/Project/吴霞/Data/exp_mtx.txt
 
 gene_list = purrr::map(new_flist, function(x) rownames(x))
 test = Reduce(union, gene_list)
+expr_merge=aggregate(.~genes,sum,data=df)
+
