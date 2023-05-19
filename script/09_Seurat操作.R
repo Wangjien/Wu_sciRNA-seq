@@ -47,7 +47,7 @@ for(i in seq_len(length(new_flist))){
 
 # 保存图片
 plist = Filter(Negate(is.null), plist) # 去除NULL
-ggsave(filename = "/root/wangje/Project/吴霞/Data/小提琴图_分散.png",plot=wrap_plots(plist,ncol=12),height=24,width=48,limitsize=FALSE)
+ggsave(filename = "/root/wangje/Project/吴霞/Data/小提琴图_分散_cutoff3.png",plot=wrap_plots(plist,ncol=12),height=24,width=48,limitsize=FALSE)
 
 # 合并列表中的Seurat对象为一个整体的Seurat对象
 ## 合并之前需要先去除dim为0的数据
@@ -57,7 +57,7 @@ scRNA_seurat = merge(new_flist[[1]],new_flist[2:length(new_flist)])
 
 # 查看合并后的数据分布(percent.mt, nFeature_RNA, nCount_RNA)
 p = VlnPlot(scRNA_seurat, features=c("nFeature_RNA", "nCount_RNA", "percent.mt"), ncol=3, pt.size= 0.01)& theme(axis.title.x=element_blank())
-ggsave(filename = "/root/wangje/Project/吴霞/Data/小提琴图_合并.png",plot=p,height=4,width=8,limitsize=FALSE)
+ggsave(filename = "/root/wangje/Project/吴霞/Data/小提琴图_合并_cutoff3.png",plot=p,height=4,width=8,limitsize=FALSE)
 
 # 进行筛选
 scRNA_seurat_raw = scRNA_seurat
@@ -65,12 +65,12 @@ scRNA_seurat = scRNA_seurat[,scRNA_seurat$nFeature_RNA >= 200 & scRNA_seurat$per
 
 # 标准化及高变基因
 scRNA_seurat <- NormalizeData(scRNA_seurat, normalization.method = "LogNormalize", scale.factor = 10000)
-scRNA_seurat <- FindVariableFeatures(scRNA_seurat, selection.method = "vst", nfeatures = 2000)
+scRNA_seurat <- FindVariableFeatures(scRNA_seurat, selection.method = "vst", nfeatures = 10000)
 
 # 均一化
-# all.genes <- rownames(scRNA_seurat)
-# scRNA_seurat <- ScaleData(scRNA_seurat, features = all.genes)
-scRNA_seurat <- ScaleData(scRNA_seurat) # 默认是对高变基因进行归一化（默认2000个高变基因）
+all.genes <- rownames(scRNA_seurat)
+scRNA_seurat <- ScaleData(scRNA_seurat, features = all.genes)
+# scRNA_seurat <- ScaleData(scRNA_seurat) # 默认是对高变基因进行归一化（默认2000个高变基因）
 
 # pca
 scRNA_seurat <- RunPCA(scRNA_seurat, features = VariableFeatures(object = scRNA_seurat))
@@ -81,7 +81,7 @@ scRNA_seurat <- FindClusters(scRNA_seurat, resolution = seq(0.1,0.5,0.1))
 scRNA_seurat <- RunUMAP(scRNA_seurat, dims = 1:30)
 
 # 保存图片
-ggsave(filename = "/root/wangje/Project/吴霞/Data/umap_new.png",plot=DimPlot(scRNA_seurat), height=5,width=5,dpi=300)
+ggsave(filename = "/root/wangje/Project/吴霞/Data/umap_new_cutoff3_保留nFeature200.png",plot=DimPlot(scRNA_seurat), height=5,width=5,dpi=300)
 # ggsave(filename = "/root/wangje/Project/吴霞/Data/Vlnplot_整体.png",plot=VlnPlot(scRNA_seurat, features=c('nCount_RNA','nFeature_RNA','percent.mt'), ncol=3), height=5,width=8,dpi=300)
 
 # 绘制FeaturePlot
@@ -101,6 +101,7 @@ marker.list <- list("NK&T cell"=NKT,'B cell'=Bcells,"Plasmas" =Plasma,
                     Myeloids=Myeloids,Fibroblasts=Fibroblasts,
                     Epithelials=Epithelial,Endothelials=Endothelial,
                     Hepatocytes=Hepatocytes,Keratinocytes=Keratinocytes,
+                    
                     DC = DC, Mast = Mast)
 
 plotFeature <- function(scRNA_data = scRNA_data,
@@ -135,7 +136,7 @@ plotFeature <- function(scRNA_data = scRNA_data,
         p_new <- Filter(Negate(anyNA), plist)
         p <- wrap_plots(p_new, bycol = T, ncol = col_num)
         return(p)}}
-png("/root/wangje/Project/吴霞/Data/大群markerFeaturePlot.png",height =2000,width = 5000,res=300)
+png("/root/wangje/Project/吴霞/Data/大群markerFeaturePlot_cutoff3_保留200.png",height =2000,width = 5000,res=300)
 plotFeature(scRNA_data=scRNA_seurat,choose="Feature",col_num=5,marker.list=marker.list)
 dev.off()
 
@@ -153,4 +154,4 @@ exp_mtx$gene = rownames(exp_mtx)
 data.table::fwrite(exp_mtx, file = "/root/wangje/Project/吴霞/Data/exp_mtx.txt", sep="\t", row.names=T)
 
 gene_list = purrr::map(new_flist, function(x) rownames(x))
-test = Reduce(intersect, gene_list)
+test = Reduce(union, gene_list)

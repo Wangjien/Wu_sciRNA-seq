@@ -41,24 +41,32 @@ done
 # 将sam文件按照barcode类型进行分割
 ####################################################
 echo ">>>>>>>>>> split samfile by barcode <<<<<<<<<<"
-sam_file="/home/data/vip9t22/Project/BC2305/BC230502-" 
-barcode_file="/home/data/vip9t22/Project/BC2305/combined_barcode.txt" 
-output_folder="/home/data/vip9t22/Project/BC2305/BC230502-"
-cutoff=20
+# 设置最大文件输出数目，linux命令
+ulimit -n 100000
+# sam_file="/home/data/vip9t22/Project/BC2305/BC230502-" 
+# barcode_file="/home/data/vip9t22/Project/BC2305/combined_barcode.txt" 
+# output_folder="/home/data/vip9t22/Project/BC2305/BC230502-"
+
+sam_file="/root/wangje/Project/吴霞/Data/05_removeDDuplicateUMI/BC230502-"
+barcode_file="/root/wangje/Project/吴霞/Data/combined_barcode.txt"
+output_folder="/root/wangje/Project/吴霞/Data/06_splitSam_new/BC230502-"
+cutoff=3
 for i in {1..96}
 do 
-    python 06.py ${sam_file}${i}_filterAndSort_rmDup.sam ${barcode_file} ${output_folder}${i} $cutoff
+    python /root/wangje/Project/吴霞/script/06_splitSAM.py ${sam_file}${i}_filterAndSort_rmDup.sam ${barcode_file} ${output_folder}${i} $cutoff
 done
 
 ###################################################
 # gene 计数
 ###################################################
 gtf_file="/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
-input_folder="/root/wangje/Project/吴霞/Data/06_splitSAM"
-sample_ID="/root/wangje/Project/吴霞/Data/06_splitSAM"
+# input_folder="/root/wangje/Project/吴霞/Data/06_splitSAM"
+input_folder="/root/wangje/Project/吴霞/Data/06_splitSam_new"
+# sample_ID="/root/wangje/Project/吴霞/Data/06_splitSAM"
+sample_ID="/root/wangje/Project/吴霞/Data/06_splitSam_new"
 core=40
 
-for i in {96..70}
+for i in {1..96}
 do 
     python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BC230502-${i} ${sample_ID}/BC230502-${i}/BC230502-${i}_filterAndSort_rmDup.sample_list.txt ${core}
 done

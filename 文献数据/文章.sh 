@@ -1,0 +1,18 @@
+###################################################################################################################################
+# https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE119945
+###################################################################################################################################
+# 数据下载
+prefetch SRR7827964	&& fastq-dump --split-3 SRR7827964.sra
+# 构建STAR index
+core=10
+output_folder="/root/wangje/Reference/Mouse/STAR_genecode_55"
+fa="/root/wangje/Reference/Mouse/GeneCode/Fasta/GRCm39.genome.fa"
+gtf="/root/wangje/Reference/Mouse/GeneCode/Anno/gencode.vM32.annotation.gtf"
+
+STAR \
+    --runMode genomeGenerate \
+    --runThreadN ${core} \
+    --genomeDir ${output_folder} \
+    --genomeFastaFiles  ${fa}\
+    --sjdbGTFfile ${gtf} \
+    --sjdbOverhang 55 #读段长度: 后续回帖读段的长度, 如果读长是PE 100， 则该值设为100-1=99
