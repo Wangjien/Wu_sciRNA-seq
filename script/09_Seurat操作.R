@@ -7,8 +7,9 @@ library(data.table)
 
 # 生成Seurat文件,存储在列表中
 flist = list()
+input_folder = "/root/wangje/Project/吴霞/Data/06_splitSAM/"
 for(i in seq_len(96)){
-    pwd=paste0("/root/wangje/Project/吴霞/Data/06_splitSAM/","BC230502-",i,"/outfile")
+    pwd=paste0(input_folder,"BC230502-",i,"/outfile")
     # print(pwd)
     if(dir.exists(pwd)){
         file_ok = file.exists(paste0(pwd,"/","barcodes.tsv")) & file.exists(paste0(pwd,"/","genes.tsv")) & file.exists(paste0(pwd,"/","matrix.mtx"))
@@ -156,7 +157,12 @@ ggsave(filename = "/root/wangje/Project/吴霞/Data/01_Top10基因热图_new.png
 # 写出表达矩阵
 exp_mtx = as.matrix(scRNA_seurat@assays$RNA@counts) %>% as.data.frame()
 exp_mtx$gene = rownames(exp_mtx)
-data.table::fwrite(exp_mtx, file = "/root/wangje/Project/吴霞/Data/exp_mtx.txt", sep="\t", row.names=T)
+data.table::fwrite(exp_mtx, file = "./exp_mtx.txt", sep="\t", row.names=T)
+
+# 合并exp_matrix中的相同基因
+df = pd.read_csv("./exp_mtx.txt",sep = '\t')
+
+
 
 gene_list = purrr::map(new_flist, function(x) rownames(x))
 test = Reduce(union, gene_list)

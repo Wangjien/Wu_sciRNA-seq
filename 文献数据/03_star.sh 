@@ -1,0 +1,36 @@
+#############################################################
+# STAR mapping
+##############################################################
+
+core=4
+index="/root/wangje/Reference/Mouse/STAR_genecode_55"
+STAR_output_folder="/root/wangje/Project/吴霞/SRR7827964/03_STAR_output"
+input_folder="/root/wangje/Project/吴霞/SRR7827964/02_trim"
+
+STAR \
+--runThreadN $core \
+--outSAMstrandField intronMotif \
+--genomeDir $index --readFilesCommand zcat \
+--readFilesIn $input_folder/outfile_trimmed.fq.gz \
+--outFileNamePrefix $STAR_output_folder/out-star- \
+--genomeLoad LoadAndKeep
+
+###########################################################
+# filter and sort
+###########################################################
+samtools view -bh -q 30 -F 4 out-star-Aligned.out.sam |samtools sort -@ 10 -|samtools view -h ->out-star-filterSort.sam
+
+
+
+
+
+#########################################################
+# barcode计数
+#########################################################
+gtf_file = "/root/wangje/Reference/Mouse/GeneCode/Anno/gencode.vM32.annotation.gtf"
+input_folder = "/root/wangje/Project/吴霞/SRR7827964/04_splitSAM"
+sample_ID = "/root/wangje/Project/吴霞/SRR7827964/04_splitSAM/out-star-filterSort_rmDup.sample_list.txt"
+core_number = 40
+
+
+

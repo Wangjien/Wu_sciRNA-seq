@@ -80,11 +80,12 @@ def split_samfile(sam_file, barcode_file, output_folder, cutoff):
     sam.close()
     for barcode in barcode_filtered:
         output_files[barcode].close()
+        
 if __name__ == '__main__':
-    sam_file = sys.argv[1]
-    barcode_file = sys.argv[2]
-    output_files = sys.argv[3]
-    cutoff = sys.argv[4]
+    # sam_file = sys.argv[1]
+    # barcode_file = sys.argv[2]
+    # output_files = sys.argv[3]
+    # cutoff = sys.argv[4]
     split_samfile(
         sam_file=sam_file,
         barcode_file= barcode_file,

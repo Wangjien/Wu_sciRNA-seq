@@ -57,7 +57,7 @@ do
 {
     STAR \
     --runThreadN $core \
-    --outSAMstrandField intronMotif\
+    --outSAMstrandField intronMotif \
     --genomeDir $index --readFilesCommand zcat \
     --readFilesIn $input_folder/BC230502-${i}_R2_barcode_trimmed.fq.gz\
     --outFileNamePrefix $STAR_output_folder/BC230502-${i} \
