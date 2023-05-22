@@ -42,27 +42,38 @@ STAR \
 # --genomeLoad 多个比对共享内存中的基因组索引 减小内存的使用量
 
 ## 并发，加快运行速度，注意内存占用
-core=4
+core=10
 index="/root/wangje/Reference/Star_index/Human/GeneCode/"
-STAR_output_folder="/root/wangje/Project/吴霞/Data/03_STAR_output"
-input_folder="/root/wangje/Project/吴霞/Data/02_trim"
+STAR_output_folder="/root/wangje/Project/Yin/LB230410/new_output/03_STAR_output/"
+input_folder="/root/wangje/Project/Yin/LB230410/new_output/02_trim"
 
 tempfifo="my_temp_fifo"
 mkfifo ${tempfifo}
 rm -rf ${tempfifo}
 exec ${core}<>${tempfifo}
 
-for i in {1..96}
+for i in {31..50}
 do
 {
     STAR \
     --runThreadN $core \
     --outSAMstrandField intronMotif \
     --genomeDir $index --readFilesCommand zcat \
-    --readFilesIn $input_folder/BC230502-${i}_R2_barcode_trimmed.fq.gz\
-    --outFileNamePrefix $STAR_output_folder/BC230502-${i} \
+    --readFilesIn $input_folder/LB230410-${i}_LB230410-${i}_2.barcode_trimmed.fq.gz\
+    --outFileNamePrefix $STAR_output_folder/LB230410-${i}- \
     --genomeLoad LoadAndKeep
 }& 
 done  >&4 
 wait
 exec 4>&-
+
+for i in {72..96}
+do
+STAR \
+    --runThreadN $core \
+    --outSAMstrandField intronMotif \
+    --genomeDir $index --readFilesCommand zcat \
+    --readFilesIn $input_folder/LB230410-${i}_LB230410-${i}_2.barcode_trimmed.fq.gz\
+    --outFileNamePrefix $STAR_output_folder/LB230410-${i}- \
+    --genomeLoad LoadAndKeep
+done

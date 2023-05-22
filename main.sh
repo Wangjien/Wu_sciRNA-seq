@@ -25,16 +25,16 @@ echo "提取Read1中的序列,添加到满足条件的Read2中并输出"
 # 从Read1中提取符合条件的序列并且输出文件
 #################################################
 
-input_folder="/root/wangje/Project/吴霞" 
-output_folder="/root/wangje/Project/吴霞/Data" 
+input_folder="/root/wangje/Project/Yin/LB230410/Data" 
+output_folder="/root/wangje/Project/Yin/LB230410/new_output" 
 ligation_barcode_file="/root/wangje/Project/吴霞/script/ligation_barcode.txt"
 RT_Barcode_file="/root/wangje/Project/吴霞/script/RT_barcode.txt"
 p7_file="/root/wangje/Project/吴霞/script/sample_p7.txt"
 for i in {1..96}
 do 
-    sample_id="BC230502-${i}"
+    sample_id="LB230410-${i}_LB230410-${i}"
     echo "$sample_id"
-    python /root/wangje/Project/吴霞/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder}/$sample_id $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+    python /root/wangje/Project/Yin/LB230410/01.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
 
 ####################################################
@@ -104,6 +104,16 @@ do
     python $script $pwd/BC230502-${i}
 done
 
+#########################################################
+# 合并文件
+#########################################################
+for i in {2..96}
+do 
+    # cd /root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-${i}
+    cat /root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-${i}/*count > /root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-${i}/outfile/count.MM
+    cat /root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-${i}/*report > /root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-${i}/outfile/report.MM
+    cp /root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-${i}/*txt  /root/wangje/Project/吴霞/Data/06_splitSAM/BC230502-${i}/outfile/
+done 
 
 
 

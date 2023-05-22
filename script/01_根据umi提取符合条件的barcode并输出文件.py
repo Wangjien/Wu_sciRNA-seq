@@ -11,8 +11,8 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
     从Read1序列中根据umi序列的位置,提取RT barcode和ligation barcode,添加到对应的双端测序的Read2序列,并输出结果文件。
     """
     time.start = time.time()
-    f1 = os.path.join(input_folder,f'{sample_id}_R1.fq.gz')
-    f2 = os.path.join(input_folder,f'{sample_id}_R2.fq.gz')
+    f1 = os.path.join(input_folder,f'{sample_id}_1.fq.gz')
+    f2 = os.path.join(input_folder,f'{sample_id}_2.fq.gz')
     f3 = os.path.join(output_folder,f"{sample_id}_R2_barcode.fq.gz")
     f3_w = gzip.open(f3, 'wb')
     
@@ -21,10 +21,6 @@ def Extract_barcode(input_folder, output_folder, sample_id, ligation_barcode_fil
     ligation_list = ligation_file['ligation'].tolist()
     RT_file = pd.read_csv(RT_Barcode_file, header=None, names=['RT_barcode'],sep='\t')
     RT_list = RT_file['RT_barcode'].to_list()
-    f1 = os.path.join(input_folder,f'{sample_id}_R1.fq.gz')
-    f2 = os.path.join(input_folder,f'{sample_id}_R2.fq.gz')
-    f3 = os.path.join(output_folder,f"{sample_id}_R2_barcode.fq.gz")
-    f3_w = gzip.open(f3, 'wb')
     log = open(os.path.join(output_folder,f"{sample_id}_log.txt"),'w')
     
     # 读入ligation barcode和RT barcode和p7的文件文件
