@@ -149,7 +149,7 @@ seurat.markers %>%
     group_by(cluster) %>%
     top_n(n = 10, wt = avg_log2FC) -> top10
 p_h = DoHeatmap(scRNA_seurat, features = top10$gene) + NoLegend() +
-    theme(axis.text.y=element_text(size=3))
+    theme(axis.text.y=element_text(size=8))
 ggsave(filename = "/root/wangje/Project/吴霞/Data/01_Top10基因热图_new.png",plot=p_h, height=5,width=5,dpi=300)
 
 # 写出表达矩阵
@@ -321,3 +321,60 @@ p_all = p5 + p1+ p2 +p3  + plot_layout(design = design )
 ggsave('./new_mt80.png', height = 5,width = 25, plot = p_all , bg = 'white')
 
 ggsave('./Featureplot.png',height=12, width = 24, plot = p4 , bg = 'white')
+
+
+flist = list()
+for(i in list.files('./')){
+    print(i)
+    counts = fread(i, data.table = F,nThread = 10)
+    rownames(counts) <- counts[, 1]
+    counts <- counts[,-1]
+    counts <- as(as.matrix(counts), "dgCMatrix")
+    scRNA <- CreateSeuratObject(counts, simplify = T)
+    scRNA[["percent.mt"]] <-PercentageFeatureSet(scRNA, pattern = "^MT-")
+    flist[[i]] = scRNA
+
+}
+
+
+   ClusterID         celltype
+1          0 Epithelial cells
+2          1 Epithelial cells
+3          2    T cells, CD8+
+4          3 Epithelial cells
+5          4 Epithelial cells
+6          5 Epithelial cells
+7          6      Fibroblasts
+8          7    T cells, CD8+
+9          8 Epithelial cells
+10         9 Epithelial cells
+11        10    Smooth muscle
+12        11       Macrophage
+13        12 Epithelial cells
+14        13  Mesangial cells
+15        14 Epithelial cells
+16        15 Epithelial cells
+17        16    T cells, CD4+
+18        17  Mesangial cells
+19        18  Mesangial cells
+20        19 Epithelial_cells
+21        20          B cells
+22        21      Hepatocytes
+23        22  Dendritic cells
+
+
+scRNA_seurat@meta.data$celltype =  case_when(
+    Idents(scRNA_seurat) %in% c(7,2,16) ~ 'T cells',
+    Idents(scRNA_seurat) %in% c(6) ~ 'Fibroblasts',
+    Idents(scRNA_seurat) %in% c(10) ~ 'Smooth muscle',
+    Idents(scRNA_seurat) %in% c(20) ~ 'B cells',
+    Idents(scRNA_seurat) %in% c(21) ~ 'Hepatocytes',
+    Idents(scRNA_seurat) %in% c(22) ~ 'Dendritic cells',
+    Idents(scRNA_seurat) %in% c(11) ~ 'Macrophage',
+    TRUE ~ 'Epithelial cells'
+)
+
+genes = c('Col6a6','Glis1','Nr1h5','Col9a1','Ntng1','Trp63','Pth2r','Fndc3c1','Mybl1','Tfap2d',
+          'C130060K24Rik','Dmbx1','Mylk4','Foxb1','Npy','Rab5a','Il31ra','Pax2','Id4','Emcn','Lamc3',
+          'Tspan8','Mpz','Ppp1r1c','Cpa2','Hbb-bh1','Dlx6','Eomes','A1cf','Metrnl','Ms4a4a','Gmnc',
+          'Uts2b','Myh6','Gp1ba','Tyr','Cryba2','Lcn2')

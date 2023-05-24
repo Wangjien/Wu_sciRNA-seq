@@ -117,7 +117,12 @@ done
 
 
 
-
+for i in {2..96}
+do  
+    cat /root/wangje/Project/Yin/LB230410/new_output/06/test${i}/*.count > /root/wangje/Project/Yin/LB230410/new_output/06/test${i}/outfile/count.MM
+    cat /root/wangje/Project/Yin/LB230410/new_output/06/test${i}/*.report > /root/wangje/Project/Yin/LB230410/new_output/06/test${i}/outfile/report.MM
+    cp /root/wangje/Project/Yin/LB230410/new_output/06/test${i}/*.txt  /root/wangje/Project/Yin/LB230410/new_output/06/test${i}/outfile/
+done
 
 
 
