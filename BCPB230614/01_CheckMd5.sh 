@@ -1,0 +1,141 @@
+file_path=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
+cat ${file_path}/*.md5 > md5.txt
+
+
+# // ---------------------------------------------------------------------
+# // Star solo
+# // ----------------------------------------------------------------------
+input_fold=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
+file_prefix=BCPB230614_BCPB230614
+output_fold=/root/wangje/Project/吴霞/E100073953/Result/STAR_out
+STAR_index=/root/wangje/Reference/Star_index/Human/GeneCode
+hairpin_barcode=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/ligation_barcode.txt
+RT_barcode=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/RT_barcode.txt
+
+# mkdir ${output_fold}/BCPB230614-{1..96}
+ulimit -n 100000
+
+for i in {1..96}
+do 
+  echo "************************ BCPB230608_BCPB230608-${i} ********************************************"
+  STAR --runThreadN 40 \
+       --genomeDir ${STAR_index} \
+       --readFilesCommand zcat \
+       --outFileNamePrefix  ${output_fold}/BCPB230614-${i} \
+       --readFilesIn ${input_fold}/${file_prefix}-${i}_2.fq.gz ${input_fold}/${file_prefix}-${i}_1.fq.gz \
+       --soloType CB_UMI_Complex \
+       --soloAdapterSequence CAGAGC \
+       --soloCBposition 0_0_2_-1 3_9_3_18 \
+       --soloUMIposition 3_1_3_8 \
+       --soloCBwhitelist ${hairpin_barcode} ${RT_barcode} \
+       --soloCBmatchWLtype 1MM \
+       --soloCellFilter EmptyDrops_CR \
+       --soloStrand Forward \
+       --outSAMattributes CB UB \
+       --outSAMtype BAM SortedByCoordinate
+done
+
+# //----------------------------------------------------------------
+# // LB230410
+#//----------------------------------------------------------------
+input_fold=/root/wangje/Project/Yin/LB230410/Data
+file_prefix=LB230410
+output_fold=/root/wangje/Project/Yin/LB230410/Star_out
+STAR_index=/root/wangje/Reference/Star_index/Human/GeneCode
+hairpin_barcode=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/ligation_barcode.txt
+RT_barcode=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/RT_barcode.txt
+
+# mkdir ${output_fold}/BCPB230614-{1..96}
+ulimit -n 100000
+
+for i in {32..96}
+do 
+  echo "************************ LB230410-9_LB230410-9-${i} ********************************************"
+  STAR --runThreadN 40 \
+       --genomeDir ${STAR_index} \
+       --readFilesCommand zcat \
+       --outFileNamePrefix  ${output_fold}/LB230410-9-${i}/ \
+       --readFilesIn ${input_fold}/${file_prefix}-${i}_${file_prefix}-${i}_2.fq.gz ${input_fold}/${file_prefix}-${i}_${file_prefix}-${i}_1.fq.gz \
+       --soloType CB_UMI_Complex \
+       --soloAdapterSequence CAGAGC \
+       --soloCBposition 0_0_2_-1 3_9_3_18 \
+       --soloUMIposition 3_1_3_8 \
+       --soloCBwhitelist ${hairpin_barcode} ${RT_barcode} \
+       --soloCBmatchWLtype 1MM \
+       --soloCellFilter EmptyDrops_CR \
+       --soloStrand Forward \
+       --outSAMattributes CB UB \
+       --outSAMtype BAM SortedByCoordinate
+done
+
+
+
+# //----------------------------------------------------------------
+# // 聚类分析
+# //----------------------------------------------------------------
+
+# // 修改文件名称
+input_fold=/root/wangje/Project/Yin/LB230410/Star_out
+file_path=Solo.out/Gene/filtered
+ID=LB230410-9
+for i in {1..96}
+do 
+    mv ${input_fold}/$ID-${i}/${file_path}/features.tsv\
+       ${input_fold}/$ID-${i}/${file_path}/genes.tsv
+done
+
+library(Seurat)
+library(ggplot2)
+library(patchwork)
+library(dplyr)
+library(patchwork)
+#<<<<<< 1 添加p7 barcode >>>>>>
+p7 = read.delim('~/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/sample_p7.txt', check.names = F, header = F)
+head(p7)
+#             V1         V2
+# 1 BCPB230608-1 TCGGATTCGG
+# 2 BCPB230608-2 GCGGCTGCGG
+# 3 BCPB230608-3 AGATTACGTT
+# 4 BCPB230608-4 CTAACTAGGT
+# 5 BCPB230608-5 CATAGCGACC
+# 6 BCPB230608-6 CCGCTAAGAG
+
+flist = list()
+for(index in 1:96){
+    tmp_name = paste0('BCPB230614-',index)
+    pwd = paste0("/root/wangje/Project/吴霞/E100073953/Result/STAR_out/",tmp_name,"Solo.out/Gene/raw")
+    cat("sample: ", tmp_name,'\t', "path: ",pwd, "\n")
+    counts = Seurat::Read10X(data.dir=pwd)
+    colnames(counts) =  paste0(p7[which(p7$V1 == tmp_name),"V2"],"_",colnames(counts))
+    SeuratObj = CreateSeuratObject(counts = counts)
+    flist[[tmp_name]] = SeuratObj
+}
+scRNA = merge(flist[[1]], flist[2:96])
+scRNA
+png('/root/wangje/Project/吴霞/E100073953/Result/Vlnplot.png', height=1000, width=3000, res=300)
+VlnPlot(scRNA, features = c('nCount_RNA','nFeature_RNA'), ncol = 3, raster=F)
+dev.off()
+
+
+
+# //----------------------------------------------------------------
+# // 使用程序进行分析
+# //----------------------------------------------------------------
+input_fold=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
+file_prefix=BCPB230614_BCPB230614
+output_fold=/root/wangje/Project/吴霞/E100073953/Result/programmer
+ligation_barcode_file=/root/wangje/Project/吴霞/script/ligation_barcode.txt
+RT_Barcode_file=/root/wangje/Project/吴霞/script/RT_barcode.txt
+p7_file=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/sample_p7.txt
+
+## 提取UMI。ligation barcode,RT barcode添加到R2序列中
+for i in {65..96}
+do 
+    sample_id=${file_prefix}-${i}
+    echo ${sample_id}
+    python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+done
+
+
+
+

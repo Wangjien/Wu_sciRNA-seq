@@ -247,6 +247,10 @@ save(df_cell, df_gene, gene_count, file = paste0(output_folder, "/sci_summary.RD
 
 ###########################################################################################
 library(data.table)
+library(Seurat)
+library(patchwork)
+library(dplyr)
+
 
 flist = list()
 for(i in 1:96){
@@ -263,6 +267,10 @@ for(i in 1:96){
     }
 }
 
+# 合并flist文件
+new_flist = Filter(Negate(is.null), flist)
+flist = NULL 
+scRNA = merge(new_flist[[1]], new_flist[2:length(new_flist)])
 
 p1 = DimPlot(scRNA_seurat, group.by = 'RNA_snn_res.0.5') + 
     labs(title = '分辨率:RNA_snn_res.0.5',
