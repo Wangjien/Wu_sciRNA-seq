@@ -2,9 +2,9 @@ file_path=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸�
 cat ${file_path}/*.md5 > md5.txt
 
 
-# // ---------------------------------------------------------------------
-# // Star solo
-# // ----------------------------------------------------------------------
+#  ---------------------------------------------------------------------
+#  Star solo
+#  ----------------------------------------------------------------------
 input_fold=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
 file_prefix=BCPB230614_BCPB230614
 output_fold=/root/wangje/Project/吴霞/E100073953/Result/STAR_out
@@ -35,9 +35,9 @@ do
        --outSAMtype BAM SortedByCoordinate
 done
 
-# //----------------------------------------------------------------
-# // LB230410
-#//----------------------------------------------------------------
+# ----------------------------------------------------------------
+#  LB230410
+# ----------------------------------------------------------------
 input_fold=/root/wangje/Project/Yin/LB230410/Data
 file_prefix=LB230410
 output_fold=/root/wangje/Project/Yin/LB230410/Star_out
@@ -70,11 +70,11 @@ done
 
 
 
-# //----------------------------------------------------------------
-# // 聚类分析
-# //----------------------------------------------------------------
+# ----------------------------------------------------------------
+#  聚类分析
+# ----------------------------------------------------------------
 
-# // 修改文件名称
+# 修改文件名称
 input_fold=/root/wangje/Project/Yin/LB230410/Star_out
 file_path=Solo.out/Gene/filtered
 ID=LB230410-9
@@ -118,12 +118,12 @@ dev.off()
 
 
 
-# //----------------------------------------------------------------
-# // 使用程序进行分析
-# //----------------------------------------------------------------
-input_fold=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
+# ----------------------------------------------------------------
+#  使用程序进行分析
+# ----------------------------------------------------------------
+input_folder=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
 file_prefix=BCPB230614_BCPB230614
-output_fold=/root/wangje/Project/吴霞/E100073953/Result/programmer
+output_folder=/root/wangje/Project/吴霞/E100073953/Result/programmer
 ligation_barcode_file=/root/wangje/Project/吴霞/script/ligation_barcode.txt
 RT_Barcode_file=/root/wangje/Project/吴霞/script/RT_barcode.txt
 p7_file=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/sample_p7.txt
@@ -136,6 +136,91 @@ do
     python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
 
+#!--------------------------------------------------------------------
+#! LB的文件分析情况
+#!--------------------------------------------------------------------
+input_folder="/root/wangje/Project/Yin/LB230410/Data"
+file_prefix="LB230410"
+output_folder="/root/wangje/Project/Yin/LB230410/01_Exrtract"
+ligation_barcode_file="/root/wangje/Project/吴霞/script/ligation_barcode.txt"
+RT_Barcode_file="/root/wangje/Project/吴霞/script/RT_barcode.txt"
+p7_file="/root/wangje/Project/Yin/LB230410/p7_sample_barcode.txt"
+
+for i in {1..96}
+do 
+    sample_id=${file_prefix}-${i}_${file_prefix}-${i}
+    echo ${sample_id}
+    python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+done
+#! --------------------------------------------------------------------------
 
 
+#! trim galary
+input_folder=/root/wangje/Project/吴霞/E100073953/Result/programmer
+output_folder=/root/wangje/Project/吴霞/E100073953/Result/02_trim
+ID=BCPB230614_BCPB230614
+for i in {1..96}
+do 
+    trim_galore $input_folder/${ID}-${i}_R2_barcode.fq.gz  -a AAAAAAAA --three_prime_clip_R1 1 -o $output_folder
+done
 
+#! STAR 比对
+core=20
+index="/root/wangje/Reference/Star_index/Human/GeneCode/"
+STAR_output_folder="/root/wangje/Project/吴霞/E100073953/Result/03_Star"
+input_folder="/root/wangje/Project/吴霞/E100073953/Result/02_trim"
+
+for i in {60..96}
+do
+STAR \
+    --runThreadN $core \
+    --outSAMstrandField intronMotif \
+    --genomeDir $index --readFilesCommand zcat \
+    --readFilesIn $input_folder/BCPB230614_BCPB230614-${i}_R2_barcode_trimmed.fq.gz\
+    --outFileNamePrefix $STAR_output_folder/BCPB230614-${i}- \
+    --genomeLoad LoadAndKeep
+done
+
+#! samtools sort and index
+input_folder="/root/wangje/Project/吴霞/E100073953/Result/03_Star"
+output_folder="/root/wangje/Project/吴霞/E100073953/Result/03_Star"
+sample_id=BCPB230614
+for i in {1..96}
+do
+    echo ">>>>>>>>>> sample: ${sample_id}-${i}"
+    samtools view -bh -q 30 -F 4 $input_folder/${sample_id}-${i}-Aligned.out.sam|samtools sort -@ 10 -|samtools view -h ->$output_folder/${sample_id}-${i}_filterAndSort.sam
+done
+
+#! Remove Duplicate
+input_folder="/root/wangje/Project/吴霞/E100073953/Result/03_Star"
+sample_prefix="BCPB230614"
+output_folder="/root/wangje/Project/吴霞/E100073953/Result/04_RemoveDuplicate"
+
+for i in {1..96}
+do 
+    echo ">>>>>>>>>>> sample: ${sample_prefix}-${i}"
+    python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/05_removeDuplicateUmi.py ${input_folder} ${sample_prefix}-${i}_filterAndSort ${output_folder}
+done 
+
+#! Split by barcode
+ulimit -n 1000000
+sam_file="/root/wangje/Project/吴霞/E100073953/Result/03_Star/BCPB230614-"
+barcode_file="/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/combined_barcode.txt"
+output_folder="/root/wangje/Project/吴霞/E100073953/Result/05_split/BCPB230608-"
+cutoff=3
+for i in {1..96}
+do 
+    echo "BCPB230608-${i}"
+    python /root/wangje/Project/吴霞/script/06_splitSAM.py ${sam_file}${i}_filterAndSort_rmDup.sam ${barcode_file} ${output_folder}${i} $cutoff
+done
+
+#! 基因计数
+gtf_file="/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
+input_folder="/root/wangje/Project/吴霞/BCPB230608/output/06"
+sample_ID="/root/wangje/Project/吴霞/BCPB230608/output/06"
+core=40
+
+for i in {90..96}
+do 
+    python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BCPB230608-${i} ${sample_ID}/BCPB230608-${i}/BCPB230608-${i}_filterAndSort_rmDup.sample_list.txt  ${core}
+done
