@@ -113,29 +113,48 @@ for(index in 1:96){
 scRNA = merge(flist[[1]], flist[2:96])
 scRNA
 png('/root/wangje/Project/吴霞/E100073953/Result/Vlnplot.png', height=1000, width=3000, res=300)
-VlnPlot(scRNA, features = c('nCount_RNA','nFeature_RNA'), ncol = 3, raster=F)
+VlnPlot(scRNA, features = c('nCount_RNA','nFeature_RNA','percent.mt'), ncol = 3, raster=F)
 dev.off()
 
+pbmc <- NormalizeData(scRNA_new, normalization.method = "LogNormalize", scale.factor = 10000)
 
 
+<<<<<<< HEAD
+
+
+# //----------------------------------------------------------------
+# // 使用程序进行分析
+# //----------------------------------------------------------------
+input_folder=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
+output_folder=/root/wangje/Project/吴霞/E100073953/Result/programmer
+=======
 # ----------------------------------------------------------------
 #  使用程序进行分析
 # ----------------------------------------------------------------
 input_folder=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
 file_prefix=BCPB230614_BCPB230614
 output_folder=/root/wangje/Project/吴霞/E100073953/Result/programmer
+>>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
 ligation_barcode_file=/root/wangje/Project/吴霞/script/ligation_barcode.txt
 RT_Barcode_file=/root/wangje/Project/吴霞/script/RT_barcode.txt
 p7_file=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/sample_p7.txt
+id=BCPB230614
 
-## 提取UMI。ligation barcode,RT barcode添加到R2序列中
-for i in {65..96}
+for i in {1..25}
 do 
-    sample_id=${file_prefix}-${i}
-    echo ${sample_id}
+    sample_id="${id}_${id}-${i}"
+    echo "$sample_id"
     python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
 
+<<<<<<< HEAD
+for i in {26..50}
+do 
+    sample_id="${id}_${id}-${i}"
+    echo "$sample_id"
+    python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+done
+=======
 #!--------------------------------------------------------------------
 #! LB的文件分析情况
 #!--------------------------------------------------------------------
@@ -145,7 +164,16 @@ output_folder="/root/wangje/Project/Yin/LB230410/01_Exrtract"
 ligation_barcode_file="/root/wangje/Project/吴霞/script/ligation_barcode.txt"
 RT_Barcode_file="/root/wangje/Project/吴霞/script/RT_barcode.txt"
 p7_file="/root/wangje/Project/Yin/LB230410/p7_sample_barcode.txt"
+>>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
 
+<<<<<<< HEAD
+for i in {51..75}
+do 
+    sample_id="${id}_${id}-${i}"
+    echo "$sample_id"
+    python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+done
+=======
 for i in {1..96}
 do 
     sample_id=${file_prefix}-${i}_${file_prefix}-${i}
@@ -153,7 +181,14 @@ do
     python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
 #! --------------------------------------------------------------------------
+>>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
 
+for i in {76..96}
+do 
+    sample_id="${id}_${id}-${i}"
+    echo "$sample_id"
+    python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
+done
 
 #! trim galary
 input_folder=/root/wangje/Project/吴霞/E100073953/Result/programmer
@@ -164,6 +199,9 @@ do
     trim_galore $input_folder/${ID}-${i}_R2_barcode.fq.gz  -a AAAAAAAA --three_prime_clip_R1 1 -o $output_folder
 done
 
+<<<<<<< HEAD
+
+=======
 #! STAR 比对
 core=20
 index="/root/wangje/Reference/Star_index/Human/GeneCode/"
@@ -224,3 +262,5 @@ for i in {90..96}
 do 
     python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BCPB230608-${i} ${sample_ID}/BCPB230608-${i}/BCPB230608-${i}_filterAndSort_rmDup.sample_list.txt  ${core}
 done
+
+>>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
