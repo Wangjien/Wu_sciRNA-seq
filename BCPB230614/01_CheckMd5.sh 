@@ -242,9 +242,9 @@ done
 
 #! Split by barcode
 ulimit -n 1000000
-sam_file="/root/wangje/Project/吴霞/E100073953/Result/03_Star/BCPB230614-"
+sam_file="/root/wangje/Project/吴霞/E100073953/Result/04_RemoveDuplicate/BCPB230614-"
 barcode_file="/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/combined_barcode.txt"
-output_folder="/root/wangje/Project/吴霞/E100073953/Result/05_split/BCPB230608-"
+output_folder="/root/wangje/Project/吴霞/E100073953/Result/05_split/BCPB230614-"
 cutoff=3
 for i in {1..96}
 do 
@@ -254,13 +254,13 @@ done
 
 #! 基因计数
 gtf_file="/root/wangje/Reference/Homo_sapiens/GeneCode/hg38/Annotation/Genes/gencode.v43.chr_patch_hapl_scaff.annotation.gtf.gz"
-input_folder="/root/wangje/Project/吴霞/BCPB230608/output/06"
-sample_ID="/root/wangje/Project/吴霞/BCPB230608/output/06"
+input_folder="/root/wangje/Project/吴霞/E100073953/Result/05_split"
+sample_ID="/root/wangje/Project/吴霞/E100073953/Result/05_split"
 core=40
 
-for i in {90..96}
+for i in {26..50}
 do 
-    python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BCPB230608-${i} ${sample_ID}/BCPB230608-${i}/BCPB230608-${i}_filterAndSort_rmDup.sample_list.txt  ${core}
+    python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BCPB230614-${i} ${sample_ID}/BCPB230614-${i}/BCPB230614-${i}_filterAndSort_rmDup.sample_list.txt  ${core}
 done
 
->>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
+
