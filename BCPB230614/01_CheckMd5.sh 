@@ -119,7 +119,6 @@ dev.off()
 pbmc <- NormalizeData(scRNA_new, normalization.method = "LogNormalize", scale.factor = 10000)
 
 
-<<<<<<< HEAD
 
 
 # //----------------------------------------------------------------
@@ -127,14 +126,12 @@ pbmc <- NormalizeData(scRNA_new, normalization.method = "LogNormalize", scale.fa
 # //----------------------------------------------------------------
 input_folder=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
 output_folder=/root/wangje/Project/吴霞/E100073953/Result/programmer
-=======
 # ----------------------------------------------------------------
 #  使用程序进行分析
 # ----------------------------------------------------------------
 input_folder=/root/wangje/Project/吴霞/E100073953/E100073953-中山大学孙逸仙纪念医院2
 file_prefix=BCPB230614_BCPB230614
 output_folder=/root/wangje/Project/吴霞/E100073953/Result/programmer
->>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
 ligation_barcode_file=/root/wangje/Project/吴霞/script/ligation_barcode.txt
 RT_Barcode_file=/root/wangje/Project/吴霞/script/RT_barcode.txt
 p7_file=/root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/sample_p7.txt
@@ -147,33 +144,28 @@ do
     python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
 
-<<<<<<< HEAD
 for i in {26..50}
 do 
     sample_id="${id}_${id}-${i}"
     echo "$sample_id"
     python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
-=======
 #!--------------------------------------------------------------------
 #! LB的文件分析情况
 #!--------------------------------------------------------------------
-input_folder="/root/wangje/Project/Yin/LB230410/Data"
-file_prefix="LB230410"
-output_folder="/root/wangje/Project/Yin/LB230410/01_Exrtract"
+input_folder="/root/wangje/Project/吴霞/BC230502_raw"
+file_prefix="BC230502"
+output_folder="/root/wangje/Project/吴霞/Data/01_Exrtract"
 ligation_barcode_file="/root/wangje/Project/吴霞/script/ligation_barcode.txt"
 RT_Barcode_file="/root/wangje/Project/吴霞/script/RT_barcode.txt"
 p7_file="/root/wangje/Project/Yin/LB230410/p7_sample_barcode.txt"
->>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
 
-<<<<<<< HEAD
 for i in {51..75}
 do 
     sample_id="${id}_${id}-${i}"
     echo "$sample_id"
     python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
-=======
 for i in {1..96}
 do 
     sample_id=${file_prefix}-${i}_${file_prefix}-${i}
@@ -181,7 +173,6 @@ do
     python /root/wangje/Project/吴霞/BCPB230608/script/Wu_sciRNA-seq/script/01_根据umi提取符合条件的barcode并输出文件.py ${input_folder} $output_folder $sample_id $ligation_barcode_file $RT_Barcode_file $p7_file
 done
 #! --------------------------------------------------------------------------
->>>>>>> 2f75cf2fba946ac0357675a73499d82bf43b9d88
 
 for i in {76..96}
 do 
@@ -262,6 +253,8 @@ for i in {76..96}
 do 
     python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BCPB230614-${i} ${sample_ID}/BCPB230614-${i}/BCPB230614-${i}_filterAndSort_rmDup.sample_list.txt  ${core}
 done
+
+
 
 
 
