@@ -37,7 +37,7 @@ sciRNAseq_gene_count_summary <- function (gene_count_folder) {
         "gene_name", "index")
     colnames(df_cell) = c("sample", "index")
     rownames(df_gene) = df_gene$gene_id
-    rownames(df_cell) = df_cell$sample
+    rownames(df_cell) = df_cell$sample 
     gene_count = sparseMatrix(i = gene_matrix$V1, j = gene_matrix$V2, 
         x = gene_matrix$V3)
     df_gene = df_gene[1:nrow(gene_count), ]
