@@ -258,7 +258,7 @@ input_folder="/root/wangje/Project/吴霞/E100073953/Result/05_split"
 sample_ID="/root/wangje/Project/吴霞/E100073953/Result/05_split"
 core=40
 
-for i in {26..50}
+for i in {76..96}
 do 
     python  /root/wangje/Project/吴霞/script/07.py ${gtf_file} ${input_folder}/BCPB230614-${i} ${sample_ID}/BCPB230614-${i}/BCPB230614-${i}_filterAndSort_rmDup.sample_list.txt  ${core}
 done
